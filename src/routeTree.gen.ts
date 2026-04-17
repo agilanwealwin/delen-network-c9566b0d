@@ -9,38 +9,110 @@
 // Additionally, you should also exclude this file from your linter and/or formatter to prevent it from being checked or modified.
 
 import { Route as rootRouteImport } from './routes/__root'
+import { Route as ValidatorRouteImport } from './routes/validator'
+import { Route as InfraPartnerRouteImport } from './routes/infra-partner'
+import { Route as AssetOwnerRouteImport } from './routes/asset-owner'
 import { Route as IndexRouteImport } from './routes/index'
+import { Route as LoginRoleRouteImport } from './routes/login.$role'
 
+const ValidatorRoute = ValidatorRouteImport.update({
+  id: '/validator',
+  path: '/validator',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const InfraPartnerRoute = InfraPartnerRouteImport.update({
+  id: '/infra-partner',
+  path: '/infra-partner',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const AssetOwnerRoute = AssetOwnerRouteImport.update({
+  id: '/asset-owner',
+  path: '/asset-owner',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const IndexRoute = IndexRouteImport.update({
   id: '/',
   path: '/',
   getParentRoute: () => rootRouteImport,
 } as any)
+const LoginRoleRoute = LoginRoleRouteImport.update({
+  id: '/login/$role',
+  path: '/login/$role',
+  getParentRoute: () => rootRouteImport,
+} as any)
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
+  '/asset-owner': typeof AssetOwnerRoute
+  '/infra-partner': typeof InfraPartnerRoute
+  '/validator': typeof ValidatorRoute
+  '/login/$role': typeof LoginRoleRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
+  '/asset-owner': typeof AssetOwnerRoute
+  '/infra-partner': typeof InfraPartnerRoute
+  '/validator': typeof ValidatorRoute
+  '/login/$role': typeof LoginRoleRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
+  '/asset-owner': typeof AssetOwnerRoute
+  '/infra-partner': typeof InfraPartnerRoute
+  '/validator': typeof ValidatorRoute
+  '/login/$role': typeof LoginRoleRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
-  fullPaths: '/'
+  fullPaths:
+    | '/'
+    | '/asset-owner'
+    | '/infra-partner'
+    | '/validator'
+    | '/login/$role'
   fileRoutesByTo: FileRoutesByTo
-  to: '/'
-  id: '__root__' | '/'
+  to: '/' | '/asset-owner' | '/infra-partner' | '/validator' | '/login/$role'
+  id:
+    | '__root__'
+    | '/'
+    | '/asset-owner'
+    | '/infra-partner'
+    | '/validator'
+    | '/login/$role'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
+  AssetOwnerRoute: typeof AssetOwnerRoute
+  InfraPartnerRoute: typeof InfraPartnerRoute
+  ValidatorRoute: typeof ValidatorRoute
+  LoginRoleRoute: typeof LoginRoleRoute
 }
 
 declare module '@tanstack/react-router' {
   interface FileRoutesByPath {
+    '/validator': {
+      id: '/validator'
+      path: '/validator'
+      fullPath: '/validator'
+      preLoaderRoute: typeof ValidatorRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/infra-partner': {
+      id: '/infra-partner'
+      path: '/infra-partner'
+      fullPath: '/infra-partner'
+      preLoaderRoute: typeof InfraPartnerRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/asset-owner': {
+      id: '/asset-owner'
+      path: '/asset-owner'
+      fullPath: '/asset-owner'
+      preLoaderRoute: typeof AssetOwnerRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/': {
       id: '/'
       path: '/'
@@ -48,21 +120,23 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof IndexRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/login/$role': {
+      id: '/login/$role'
+      path: '/login/$role'
+      fullPath: '/login/$role'
+      preLoaderRoute: typeof LoginRoleRouteImport
+      parentRoute: typeof rootRouteImport
+    }
   }
 }
 
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
+  AssetOwnerRoute: AssetOwnerRoute,
+  InfraPartnerRoute: InfraPartnerRoute,
+  ValidatorRoute: ValidatorRoute,
+  LoginRoleRoute: LoginRoleRoute,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)
   ._addFileTypes<FileRouteTypes>()
-
-import type { getRouter } from './router.tsx'
-import type { createStart } from '@tanstack/react-start'
-declare module '@tanstack/react-start' {
-  interface Register {
-    ssr: true
-    router: Awaited<ReturnType<typeof getRouter>>
-  }
-}
